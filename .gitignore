@@ -1,0 +1,27 @@
+# catkin 编译产物
+build/
+devel/
+install/
+logs/
+
+# 编译中间文件
+*.o
+*.so
+*.a
+*.pyc
+__pycache__/
+
+# IDE / 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 测试日志（实测数据只回填结论，不传原始日志）
+charge_test/
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini

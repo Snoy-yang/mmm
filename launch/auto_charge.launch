@@ -1,0 +1,21 @@
+<launch>
+  <!-- 参数 -->
+  <rosparam command="load" file="$(find bobac3_auto_charge)/config/charge_params.yaml" />
+
+  <!-- 机器人底盘到后置相机的静态坐标变换 -->
+  <node pkg="tf2_ros" type="static_transform_publisher"
+        name="base_to_bottom_camera"
+        args="0 -0.19 0.055  0 0 3.14159  base_footprint bottom_camera_optical_link" />
+
+  <!-- 自主回充主节点 -->
+  <node pkg="bobac3_auto_charge" type="auto_charge_node"
+        name="auto_charge_node" output="screen" />
+
+  <!--
+    运行前需确保以下节点已启动：
+      /bobac3_base_node     底盘控制
+      /relative_move_node   相对运动
+      /ar_track_alvar       AR 码识别
+      /usb_cam              USB 相机
+  -->
+</launch>
