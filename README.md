@@ -93,6 +93,29 @@ roslaunch bobac3_auto_charge auto_charge.launch
 | `marker_stale_sec` | 0.5 s | 数据超过该时长视为失效 |
 | `service_retry` | 2 | 运动服务失败重试次数 |
 
+### 启动前自检（建议）
+
+改完参数先跑一次校验，不用启动机器人和 Gazebo：
+
+```bash
+python3 scripts/check_params.py            # 需要 pyyaml
+python3 scripts/check_params.py --strict   # 警告也算失败，适合装进 CI
+```
+
+它检查四类问题，其中前两类 **ROS 自己永远不会报**：
+
+| 检查 | 为什么 ROS 不报 |
+|---|---|
+| 参数名拼写（如 `x_tolerence`） | 取不到就退回代码默认值，**静默地没生效** |
+| 参数间一致性（如 `docking_distance > fixed_distance`） | 节点不做交叉校验，方向反了照样启动、照样往后退 |
+| 单参数越界 | 只在撞上时暴露，通常是几十分钟后的现场 |
+| 类型错误 | yaml 解析宽松，`"0.03"` 带引号也能塞进去 |
+
+退出码：`0` 为通过（可能带警告），`1` 为有错误。
+
+> 这类「配置写错了但不报错」的坑，排查成本远高于写一个校验脚本。
+> 参数写错最坏的结果不是启动失败，而是**启动成功、跑起来、然后以一种你完全想不到的方式失败**。
+
 ## 设计取舍
 
 **1. 前后位移必须分段（`step_size = 5cm`）**
