@@ -1,0 +1,30 @@
+# 自主回充节点参数
+# 所有阈值均可在线调整，无需重新编译
+
+# --- 接口 ---
+marker_topic:  "/base_camera/ar_pose_marker"
+move_service:  "relative_move"
+global_frame:  "odom"
+
+# --- 对准容差 ---
+x_tolerance:        0.03    # 横向偏差容差 (m)，3cm
+yaw_tolerance:      0.05    # 朝向偏差容差 (rad)，约 2.9 度
+max_align_iter:     8       # 最大对准迭代次数（原版 5 次常不够）
+stall_threshold:    0.05    # 归一化残差改善小于该值视为停滞（无量纲）
+
+# --- 距离控制 ---
+fixed_distance:     0.20    # 对准后退到的固定点距离 (m)，留出盲倒余量
+docking_distance:   0.35    # 盲倒对接距离 (m)，此段相机已看不到 AR 码
+
+# --- 分段运动 ---
+step_size:          0.05    # 前后位移分段步长 (m)，避免 AR 码脱出视野
+step_delay:         0.30    # 每步之间延时 (s)，等底盘稳定
+settle_time:        0.30    # 每次动作后等待位姿稳定的时间 (s)
+
+# --- 测量 ---
+samples_per_measure: 5      # 每次决策前采样帧数，取均值抑制噪声
+marker_timeout:      3.0    # 等待 AR 码出现的超时 (s)
+marker_stale_sec:    0.5    # AR 码数据超过该时长视为失效 (s)
+
+# --- 可靠性 ---
+service_retry:       2      # 相对运动服务调用失败重试次数
